@@ -44,6 +44,10 @@ def min_weight_set_cover_approx_algo(tuple_list, num_kingdoms, adj_matrix):
 		efficient_tuple = ()
 		efficient_cost = float('inf')
 
+		# if the tuple_list is empty somehow (we've removed all tuples or it starts empty), then throw error
+		if not tuple_list
+			raise ValueError("tuple_list in min_weight_set_cover_approx_algo is empty before the NEW set covers everything in the ORIGINAL set!")
+
 		# look for the minimum efficient set to add to NEW
 		for t in tuple_list:
 			set_cover = t[0]
