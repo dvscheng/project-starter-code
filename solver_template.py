@@ -119,13 +119,15 @@ def DFS(adj_matrix, start_index):
 	def DFS_helper(i):
 		# visit the vertex
 		visited[i] = True
-
-		# add the vertex to the traversal list (in order)
+		# add this vertex to the traversal list
 		traversal.append(i)
+
 		for j in range(length):
 			# if we haven't visited this neighbor j AND if there's an edge between i and j (it can't be an 'x')
 			if not visited[j] and not isinstance(adj_matrix[i][j], str):
 				DFS_helper(j)
+				# when coming back, add the parent vertex to the traversal list (have to backtrack)
+				traversal.append(i)
 
 	# run DFS
 	DFS_helper(start_index)
