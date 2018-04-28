@@ -44,10 +44,6 @@ def min_weight_set_cover_approx_algo(tuple_list, num_kingdoms, adj_matrix):
 		efficient_tuple = ()
 		efficient_cost = float('inf')
 
-		# if the tuple_list is empty somehow (we've removed all tuples or it starts empty), then throw error
-		if not tuple_list
-			raise ValueError("tuple_list in min_weight_set_cover_approx_algo is empty before the NEW set covers everything in the ORIGINAL set!")
-
 		# look for the minimum efficient set to add to NEW
 		for t in tuple_list:
 			set_cover = t[0]
@@ -58,7 +54,11 @@ def min_weight_set_cover_approx_algo(tuple_list, num_kingdoms, adj_matrix):
 				efficient_tuple = t
 				efficient_cost = kingdom_efficiency
 
-		# TODO: if conquering a kingdom yields 0 new vertices, can remove from tuple_list immediately
+		# if NEW != ORIGINAL but there are no more valid (contributing at least 1 new vertex) set_covers to add, then error
+		if not efficient_tuple:
+			raise ValueError("efficient_tuple in min_weight_set_cover_approx_algo is empty!")
+			
+		# TODO: optimization; if conquering a kingdom yields 0 new vertices, can remove from tuple_list immediately
 
 		# add the most efficient set to the NEW set
 		NEW = NEW.union(efficient_tuple[0])
@@ -88,7 +88,7 @@ def calc_efficiency(original_set, candidate_set, candidate_index, adj_matrix):
 	# every value will be > 0, so a val of 0 means you conquer for free and gain vertices
 	if conquering_cost == 0 and num_new_vertices != 0:
 		return 0
-	# if the candidate does not add any new vertices, return an efficiency of 0
+	# if the candidate does not add any new vertices, return an efficiency of inf
 	if num_new_vertices == 0:
 		return float('inf')
 	return float(conquering_cost)/float(num_new_vertices)
