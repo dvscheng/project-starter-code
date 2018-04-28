@@ -6,6 +6,8 @@ import argparse
 import utils
 from student_utils_sp18 import *
 
+import time
+
 """
 ======================================================================
   Complete the following function.
@@ -226,14 +228,22 @@ def solve(list_of_kingdom_names, starting_kingdom, adjacency_matrix, params=[]):
 	subgraph = [["x" for elem1 in range(len(adjacency_matrix))] for elem2 in range(len(adjacency_matrix))]
 	starting = [terminal_nodes[0]] #nodes we can start from for steiner tree creation
 	terminal_nodes.remove(terminal_nodes[0])
+	optimizedict = {}
 	while terminal_nodes:
 		wtf = [] #list of (path, distance)
 		for startnode in starting:
 			for endnode in terminal_nodes:
-				#find distance from startnode to endnode for all pairs
-				path, distance = Dijkstra(adjacency_matrix, startnode, endnode)
-
-				wtf.append((path, distance))
+				found = 0
+				for key, item in optimizedict.items():
+					if key[0] == startnode and key[len(key) - 1] == endnode:
+						wtf.append((key, distance))
+						found = 1
+						break
+				if found == 0:
+					#find distance from startnode to endnode for all pairs
+					path, distance = Dijkstra(adjacency_matrix, startnode, endnode)
+					wtf.append((path, distance))
+					optimizedict[tuple(path)] = distance
 		#find min path, distance in wtf
 		newpath = wtf[0][0]
 		mindist = wtf[0][1]
@@ -244,11 +254,15 @@ def solve(list_of_kingdom_names, starting_kingdom, adjacency_matrix, params=[]):
 		starting.append(newpath[len(newpath) - 1]) #append endnode
 		terminal_nodes.remove(newpath[len(newpath) - 1]) #remove endnode
 		blah = 0
+
+		#utils.write_to_file("test.out", "length: " + str(len(terminal_nodes)) + "time: " + str(time.time()) + "\n", append=True)
+
 		#add path to adjacency matrix (not sure if this is correct)
 		while blah < (len(newpath) - 1):
 			subgraph[newpath[blah]][newpath[blah + 1]] = adjacency_matrix[newpath[blah]][newpath[blah + 1]]
 			subgraph[newpath[blah + 1]][newpath[blah]] = adjacency_matrix[newpath[blah + 1]][newpath[blah]]
-			blah += 1;
+			blah += 1
+
 	let1 = 0
 	offset = 0
 	#reducing the matrix to all numbers (no "x")
