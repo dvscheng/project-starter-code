@@ -51,7 +51,7 @@ def min_weight_set_cover_approx_algo(tuple_list, num_kingdoms, adj_matrix):
 			set_cover = t[0]
 			kingdom_index = t[1]
 			kingdom_efficiency = calc_efficiency(NEW, set_cover, kingdom_index, adj_matrix)
-			
+
 			if kingdom_efficiency < efficient_cost:
 				efficient_tuple = t
 				efficient_cost = kingdom_efficiency
@@ -59,7 +59,7 @@ def min_weight_set_cover_approx_algo(tuple_list, num_kingdoms, adj_matrix):
 		# if NEW != ORIGINAL but there are no more valid (contributing at least 1 new vertex) set_covers to add, then error
 		if not efficient_tuple:
 			raise ValueError("efficient_tuple in min_weight_set_cover_approx_algo is empty!")
-			
+
 		# TODO: optimization; if conquering a kingdom yields 0 new vertices, can remove from tuple_list immediately
 
 		# add the most efficient set to the NEW set
@@ -136,7 +136,7 @@ def DFS(adj_matrix, start_index):
 
 	return traversal
 
-	
+
 
 
 
@@ -227,6 +227,9 @@ def solve(list_of_kingdom_names, starting_kingdom, adjacency_matrix, params=[]):
 	#subgraph is same size as adjacency matrix, originally all "x"
 	subgraph = [["x" for elem1 in range(len(adjacency_matrix))] for elem2 in range(len(adjacency_matrix))]
 	starting = [terminal_nodes[0]] #nodes we can start from for steiner tree creation
+	if len(terminal_nodes) == 1:
+		realthing = list_of_kingdom_names[terminal_nodes[0]]
+		return [realthing], [realthing]
 	terminal_nodes.remove(terminal_nodes[0])
 	optimizedict = {}
 	while terminal_nodes:
@@ -262,7 +265,6 @@ def solve(list_of_kingdom_names, starting_kingdom, adjacency_matrix, params=[]):
 			subgraph[newpath[blah]][newpath[blah + 1]] = adjacency_matrix[newpath[blah]][newpath[blah + 1]]
 			subgraph[newpath[blah + 1]][newpath[blah]] = adjacency_matrix[newpath[blah + 1]][newpath[blah]]
 			blah += 1
-
 	let1 = 0
 	offset = 0
 	#reducing the matrix to all numbers (no "x")
@@ -275,14 +277,12 @@ def solve(list_of_kingdom_names, starting_kingdom, adjacency_matrix, params=[]):
 			offset += 1
 		else:
 			realindexes.append(let1)
-		let1 += 1
-
+		let1+=1
 	#run DFS
 	traversal = DFS(subgraph, realindexes.index(startingnode))
 	last_kingdom = traversal[len(traversal)-1]
 	starting_kingdom = startingnode
 	path = Dijkstra(adjacency_matrix, last_kingdom, starting_kingdom)[0]
-
 	realtraversal= []
 	for node in traversal:
 		realtraversal.append(realindexes[node])
