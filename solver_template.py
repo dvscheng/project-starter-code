@@ -280,13 +280,13 @@ def solve(list_of_kingdom_names, starting_kingdom, adjacency_matrix, params=[]):
 		let1+=1
 	#run DFS
 	traversal = DFS(subgraph, realindexes.index(startingnode))
-	last_kingdom = traversal[len(traversal)-1]
-	starting_kingdom = startingnode
-	path = Dijkstra(adjacency_matrix, last_kingdom, starting_kingdom)[0]
+	last_kingdom_real = realindexes[traversal[len(traversal)-1]]
+	starting_kingdom_real = startingnode
+	path = Dijkstra(adjacency_matrix, last_kingdom_real, starting_kingdom_real)[0]
 	realtraversal= []
 	for node in traversal:
 		realtraversal.append(realindexes[node])
-
+	#print (realtraversal)
 	# delete the first node in the path because itll repeat the last_kingdom, then add to traversal
 	del path[0]
 	for i in path:
